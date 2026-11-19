@@ -125,7 +125,7 @@ button.mon-card:hover:not(:disabled){border-color:var(--muted)}
 .mon-card .art{width:96px;position:relative;margin:4px 0 6px}
 .mon-card b{font-family:var(--f-display);font-weight:400;font-size:19px}
 .mon-card span{font-size:12.5px;color:var(--muted);line-height:1.4}
-.mon-card.locked .art{filter:brightness(0) opacity(.45)}
+.mon-card.mon-locked .art{filter:brightness(0) opacity(.45)}
 .mon-card .tag{position:absolute;top:8px;right:8px;font-size:11px;font-weight:700;color:var(--gold)}
 .type-chip{font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--panel-2);color:var(--ink)}
 
@@ -1054,7 +1054,7 @@ function renderPartner(isDex){
     const m = MONS[k];
     const has = !isDex || owned.has(k);
     const un = UNLOCKS.find(u => u.key === k);
-    return `<button type="button" class="mon-card ${has ? '' : 'locked'}" data-k="${k}" aria-pressed="${pickKey === k}" ${has ? '' : 'disabled'}>
+    return `<button type="button" class="mon-card ${has ? '' : 'mon-locked'}" data-k="${k}" aria-pressed="${pickKey === k}" ${has ? '' : 'disabled'}>
       ${isDex && st.mon === k ? '<span class="tag">지금 파트너</span>' : ''}
       <div class="art">${sprHTML(k, has && isDex ? st.rating : null, {bob: has})}</div>
       <b>${has ? esc(m.name) : '???'}</b>
