@@ -596,7 +596,7 @@ const MONS = {
     grid:['..a........a....','..oa......ao....','..obo....obo....','..obboooobbo....','.obbbbbbbbbbo...','.obewbbbbewbbo..','.obeebbbbeebbo..','.obbbbppbbbbbo..','..obbbbbbbbbo.oo','.odobllllllbodoo','oddobllllllbobbo','odo.obllllbo.obo','.o..obbbbbbo.obo','....obo..obooobo','....oo....obbbo.','...........ooo..']},
 };
 const STARTERS = ['loop','stack','bit','bug'];
-const UNLOCKS = [{key:'sort', wins:1, text:'첫 승리'}, {key:'recur', wins:3, text:'3승'}];
+const UNLOCKS = [{key:'sort', wins:1, text:'첫 승리'}, {key:'loop', wins:2, text:'2승'}, {key:'recur', wins:3, text:'3승'}, {key:'stack', wins:4, text:'4승'}, {key:'bit', wins:6, text:'6승'}, {key:'bug', wins:8, text:'8승'}];
 const CROWN = {pal:{y:'#f3c34f',r:'#ff5466',o:'#5a3d00'}, grid:['y...y...y','yy.yyy.yy','yyyyyyyyy','yryyryyry','ooooooooo']};
 
 const BOTS = [
@@ -1044,7 +1044,7 @@ function renderPartner(isDex){
   const st = me();
   pickKey = isDex ? st.mon : null;
   $('#partnerTitle').textContent = isDex ? '파트너 도감' : '함께 싸울 파트너를 고르세요';
-  $('#partnerNote').textContent = isDex ? '모은 파트너 중에서 배틀에 데리고 갈 친구를 바꿀 수 있습니다.' : '배틀에서 이기면 새 파트너가 합류하고, 티어가 오르면 진화합니다.';
+  $('#partnerNote').textContent = isDex ? '모은 파트너 중에서 배틀에 데리고 갈 친구를 바꿀 수 있습니다. 이길수록 새 친구가 합류합니다.' : '나머지 친구들은 배틀에서 이기면 하나씩 합류하고, 티어가 오르면 진화합니다.';
   $('#btnPartnerBack').hidden = !isDex;
   $('#btnPartner').textContent = isDex ? '이 친구로 바꾸기' : '이 친구와 함께하기';
   $('#nickIn').value = st.nick || '';

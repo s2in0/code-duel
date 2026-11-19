@@ -56,6 +56,14 @@ language sql stable security definer set search_path = public as $$
   select coalesce((select join_code from public.class_secret where id = 1), '') in ('', coalesce(trim(p_code), ''));
 $$;
 
+-- 승리 수로 합류하는 파트너 (게임 화면의 UNLOCKS 와 같아야 합니다)
+create or replace function public.unlocked_mons(p_wins int) returns text[]
+language sql immutable as $$
+  select coalesce(array_agg(k order by w), '{}')
+  from (values ('sort',1),('loop',2),('recur',3),('stack',4),('bit',6),('bug',8)) u(k, w)
+  where p_wins >= w;
+$$;
+
 -- ===== RLS =====
 alter table public.settings enable row level security;
 alter table public.class_secret enable row level security;
@@ -107,7 +115,7 @@ begin
   if not public.check_code(p_code) then raise exception 'bad_code'; end if;
   select * into s from public.students where sid = p_sid for update;
   if not found then raise exception 'no_student'; end if;
-  v_owned := s.owned;
+  select coalesce(array_agg(distinct x), '{}') into v_owned from unnest(s.owned || public.unlocked_mons(s.wins)) x;
   if s.mon is null then
     if p_mon not in ('loop','stack','bit','bug') then raise exception 'bad_mon'; end if;
   elsif not (p_mon = any(v_owned)) then
@@ -159,11 +167,9 @@ begin
     updated_at = now()
   where sid = p_sid returning * into s;
 
-  v_owned := s.owned;
-  if s.wins >= 1 and not ('sort' = any(v_owned)) then v_owned := array_append(v_owned, 'sort'); v_new := array_append(v_new, 'sort'); end if;
-  if s.wins >= 3 and not ('recur' = any(v_owned)) then v_owned := array_append(v_owned, 'recur'); v_new := array_append(v_new, 'recur'); end if;
+  select coalesce(array_agg(x), '{}') into v_new from unnest(public.unlocked_mons(s.wins)) x where not (x = any(s.owned));
   if array_length(v_new, 1) > 0 then
-    update public.students set owned = v_owned where sid = p_sid returning * into s;
+    update public.students set owned = s.owned || v_new where sid = p_sid returning * into s;
   end if;
 
   return jsonb_build_object('student', to_jsonb(s), 'before', v_before, 'after', v_after, 'new_mons', to_jsonb(v_new));
