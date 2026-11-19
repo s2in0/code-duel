@@ -1118,7 +1118,7 @@ function renderPartner(isDex){
       <div class="art">${sprHTML(k, has && isDex ? st.rating : null, {bob: has})}</div>
       <b>${has ? esc(m.name) : '???'}</b>
       <span class="type-chip">${has ? m.type + ' 타입' : '잠김'}</span>
-      <span>${has ? esc(m.desc) : `${un ? un.text : ''} 달성하면 합류`}</span>
+      <span>${has ? esc(m.desc) : un ? `${un.text} 달성하면 합류` : '처음에 고르지 않은 시작 파트너'}</span>
     </button>`;
   }).join('');
   $('#btnPartner').disabled = !pickKey;
